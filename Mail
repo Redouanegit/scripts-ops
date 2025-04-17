@@ -1,0 +1,15 @@
+Subject: Request for a Meeting to Investigate Traffic Manager Performance Issue
+
+Hi [Team Name],
+
+I hope you're doing well.
+
+We're currently investigating a performance issue affecting file downloads from our Artifactory instance. While users in Paris are experiencing normal speeds, those connecting from New York are reporting significantly slower download rates.
+
+Initial tests suggest that latency is not the root cause, and the issue may be related to how Traffic Manager is routing or handling traffic to the affected region.
+
+Would it be possible to schedule a meeting with your team to analyze this further together? Please let us know your availability this week, and we’ll be happy to coordinate accordingly.
+
+Thanks in advance for your support.
+
+Best regards,
