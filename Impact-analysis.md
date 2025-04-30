@@ -1,127 +1,91 @@
-Impact Analysis – Migration from SLB to HAProxy with TrafficManager Constraints
+# Impact Analysis: Migration from SLB to HAProxy (with TrafficManager Constraints)
 
-1. Current Architecture Overview
+## 1. Current Architecture Overview
 
-Primary JFrog Cluster:
+- **Primary JFrog Cluster**:
+  - Deployed in `fr-paris`, across two Availability Zones.
+  - Fronted by **two managed SLBs** (Service Load Balancers).
 
-Deployed in fr-paris, spread across two Availability Zones.
+- **Disaster Recovery (DR) Cluster**:
+  - Deployed in `fr-north`, also behind a **managed SLB**.
 
-Fronted by two managed SLBs (Service Load Balancers).
-
-
-Disaster Recovery (DR) Cluster:
-
-Deployed in fr-north, also behind a managed SLB.
-
-
-TrafficManager:
-
-A global DNS-based routing service.
-
-Performs health-based failover between the 3 SLBs (2 in fr-paris, 1 in fr-north).
-
-Accepts only SLBs as members, not static IPs or custom instances.
-
-
-
+- **TrafficManager**:
+  - A global DNS-based routing service.
+  - Performs **health-based failover** across the three SLBs.
+  - **Only supports SLB-type members** for routing targets.
 
 ---
 
-2. Objective of the Change
+## 2. Objective of the Change
 
-Due to observed instabilities or dysfunctions in the SLB service, evaluate the feasibility and impact of replacing the SLBs in fr-paris with HAProxy, a self-managed load balancing solution.
-
-
+Due to observed **instability in the managed SLB service**, we aim to evaluate the feasibility and impact of replacing the SLBs in `fr-paris` with **self-managed HAProxy** instances.
 
 ---
 
-3. Key Impact Areas
+## 3. Key Impact Areas
 
-3.1 Compatibility with TrafficManager
+### 3.1 Compatibility with TrafficManager
 
-Critical Limitation: TrafficManager only supports SLB-type resources as routing targets.
-
-Impact: Replacing SLBs directly with HAProxy (standalone) would render TrafficManager unable to route traffic to the primary cluster.
-
-Mitigation:
-
-Deploy HAProxy instances behind a lightweight SLB to maintain TrafficManager compatibility.
-
-SLB acts as a passthrough proxy (L4 or L7) to HAProxy.
-
-
-
+- **Limitation**: TrafficManager **only accepts SLBs** as members.
+- **Impact**: Replacing SLBs with standalone HAProxy breaks routing functionality.
+- **Mitigation**: 
+  - Deploy HAProxy behind a **lightweight SLB** that acts as a passthrough (Layer 4 or Layer 7).
+  - This preserves compatibility with TrafficManager’s routing and failover.
 
 ---
 
-3.2 Network & Connectivity
+### 3.2 Network & Connectivity
 
-Impact: Existing firewall rules and security groups are configured for SLB IPs.
-
-Action Required:
-
-If HAProxy is deployed without SLB, network rules must be updated across environments.
-
-Using SLB in front of HAProxy avoids this disruption (IP continuity, minimal changes).
-
-
-
+- **Impact**: Existing network rules are scoped to SLB IPs.
+- **Mitigation**:
+  - Maintain SLB fronting HAProxy to avoid modifying ACLs and firewall rules.
+  - If HAProxy is exposed directly, all consumer endpoints and rules must be updated.
 
 ---
 
-3.3 High Availability & Scalability
+### 3.3 High Availability & Scalability
 
-SLB Advantage: Native multi-AZ redundancy and auto-scaling.
-
-HAProxy Requirement:
-
-Deploy at least two HAProxy nodes across AZs.
-
-Implement failover mechanisms (e.g., Keepalived, VRRP, DNS, etc.).
-
-Design for load distribution and scalability.
-
-
-
+- **SLB Benefits**: Built-in multi-AZ failover and auto-scaling.
+- **With HAProxy**:
+  - Deploy **at least two** instances across AZs.
+  - Implement **failover mechanisms** (e.g., Keepalived or VRRP).
+  - Ensure proper load balancing and scaling strategies.
 
 ---
 
-3.4 Monitoring & Operations
+### 3.4 Monitoring & Operations
 
-Impact: Moving from managed SLB to self-hosted HAProxy increases operational responsibility.
-
-Required Actions:
-
-Set up monitoring and alerting (e.g., Prometheus, Grafana, ELK).
-
-Regular updates, log management, SSL renewal handled in-house.
-
-
-
+- **Impact**: Transition to HAProxy shifts monitoring responsibility to internal teams.
+- **Required Actions**:
+  - Set up monitoring (e.g., Prometheus, Grafana).
+  - Enable health checks, log aggregation, and alerts.
+  - Implement certificate lifecycle management if terminating TLS in HAProxy.
 
 ---
 
-3.5 TLS Termination & Security
+### 3.5 TLS Termination & Security
 
-Impact: Managed SLBs may handle TLS termination and basic DDoS/WAF protections.
-
-Actions:
-
-Implement TLS termination in HAProxy, including certificate management.
-
-Review DDoS protection options (e.g., upstream filtering, rate limiting).
-
-
-
+- **Impact**: SLBs may handle TLS, DDoS protection, and basic WAF.
+- **Mitigation**:
+  - Configure **TLS termination** in HAProxy with secure ciphers.
+  - Assess need for upstream DDoS mitigation or additional WAF capabilities.
 
 ---
 
-4. Recommended Architecture Adjustment
+## 4. Recommended Architecture Adjustment
 
-To ensure compatibility with TrafficManager and maintain routing and failover mechanisms, the best approach is:
+To maintain TrafficManager integration while introducing HAProxy, we recommend:
 
-> Deploy HAProxy instances behind a lightweight SLB, which remains the registered member in TrafficManager.
+> **Deploying HAProxy instances behind a lightweight SLB**, which remains registered with TrafficManager.
 
+This hybrid model preserves DNS failover while enabling greater control of routing logic via HAProxy.
 
+---
 
-This preserves DNS-based failover while gaining routing control and flexibility with HAProxy.
+## Next Steps
+
+1. Design and test HAProxy configuration (load balancing, TLS, health checks).
+2. Deploy HAProxy in HA mode across AZs.
+3. Place HAProxy behind a lightweight SLB.
+4. Validate failover behavior via TrafficManager.
+5. Gradually shift production traffic and monitor.
