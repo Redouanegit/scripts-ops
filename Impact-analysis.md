@@ -89,3 +89,40 @@ This hybrid model preserves DNS failover while enabling greater control of routi
 3. Place HAProxy behind a lightweight SLB.
 4. Validate failover behavior via TrafficManager.
 5. Gradually shift production traffic and monitor.
+
+ 1. Cost Comparison: Current (SLB + TrafficManager) vs. Proposed (HAProxy + Floating IP)
+
+Component	Current Solution (SLB + TrafficManager)	Proposed Solution (HAProxy + Floating IP)
+
+Service Load Balancer	✓ Paid per SLB (multi-AZ x2 in fr-paris + 1 in fr-north)	❌ Eliminated — no SLB usage
+TrafficManager	✓ Paid DNS-based routing service (per query and region)	❌ Eliminated — not used
+HAProxy Instances	❌ Not used	✓ VM cost + managed internally
+Public/Private IPs	✓ Included with SLBs	✓ Floating IP — may have a small fee
+Operational Cost	✓ Lower — managed infra (SLB/TrafficManager)	↑ Higher — must manage HAProxy, failover, TLS
+Monitoring	✓ Minimal (built-in SLB health checks)	↑ Additional tools (Prometheus, logs, alerting)
+Support/Tooling	✓ Vendor-managed SLB/TrafficManager support	↑ Requires internal expertise and maintenance
+
+
+💡 Summary:
+
+CapEx/OpEx costs will decrease by removing SLBs and TrafficManager.
+
+Internal operational cost increases (infrastructure, failover scripts, monitoring).
+
+Net savings depend on how efficiently HAProxy and failover automation are implemented.
+
+
+
+---
+
+🗺️ 2. Implementation Roadmap
+
+Phase	Milestone	Description
+
+Phase 0	✅ Assessment & Design	- Confirm floating IP capabilities across regions<br>- Define HAProxy architecture<br>- Evaluate DNS TTL, failover logic
+Phase 1	🔧 Infrastructure Setup	- Deploy HAProxy VMs in fr-paris and fr-north<br>- Configure TLS, routing rules, and internal health checks
+Phase 2	🔁 Failover Automation	- Implement floating IP assignment scripts or tools<br>- Add HA/VRRP logic (e.g., Keepalived or API-based)
+Phase 3	📊 Monitoring & Observability	- Set up Prometheus/Grafana, logs, alerts<br>- Define health check endpoints for HAProxy
+Phase 4	🧪 Test & Validate	- Perform controlled failover tests<br>- Validate floating IP reassignment time<br>- Confirm service availability post-switch
+Phase 5	🚀 Production Rollout	- Repoint DNS to the floating IP<br>- Remove SLBs from fr-paris and fr-north<br>- Decommission TrafficManager
+Phase 6	📉 Post-Migration Review	- Review logs, performance, alerts<br>- Optimize HAProxy config and monitoring thresholds<br>- Final cost analysis
