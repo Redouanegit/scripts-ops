@@ -18,7 +18,22 @@
 
 ## 2. Objective of the Change
 
-Due to observed **instability in the managed SLB service**, we aim to evaluate the feasibility and impact of replacing the SLBs in `fr-paris` with **self-managed HAProxy** instances.
+The current architecture relies on managed Service Load Balancers (SLBs) and TrafficManager to provide high availability and disaster recovery across regions. However, we've identified two key problems:
+
+1. Operational instability and limitations with the managed SLB service.
+
+
+2. Performance degradation — users located outside the fr-paris region (particularly in fr-north) experience slow artifact downloads, likely due to inefficient routing and SLB behavior.
+
+
+
+The goal of this initiative is to:
+
+Eliminate the dependency on SLBs entirely.
+
+Replace SLBs with HAProxy to gain better control over routing and performance.
+
+Implement a failover strategy (using floating IPs) that ensures high availability, lower latency for remote users, and independent control over global traffic routing.
 
 ---
 
