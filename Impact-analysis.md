@@ -118,6 +118,25 @@ Monitoring	✓ Minimal (built-in SLB health checks)	↑ Additional tools (Promet
 Support/Tooling	✓ Vendor-managed SLB/TrafficManager support	↑ Requires internal expertise and maintenance
 
 
+Task	Estimated Duration	Daily Rate (€)	Cost (€)
+
+Design & architecture planning	1 day	€800	€800
+HAProxy setup and testing (multi-AZ)	2 days	€800	€1,600
+Failover automation + floating IP logic	2 days	€800	€1,600
+Monitoring + alerting setup	1 day	€800	€800
+Documentation & training	0.5 day	€800	€400
+Rollout and production cutover	1 day	€800	€800
+Post-migration support (1st month)	2 days (spread out)	€800	€1,600
+
+
+
+---
+
+✅ Total One-Time Operational Effort: ~9.5 days
+
+💰 Total Estimated Cost: €7,600
+
+
 💡 Summary:
 
 CapEx/OpEx costs will decrease by removing SLBs and TrafficManager.
