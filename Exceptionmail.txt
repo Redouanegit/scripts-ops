@@ -1,0 +1,23 @@
+Subject: Request for Exception to Add OCS Instances (HAProxy Nodes) as Members of the Traffic Manager
+
+Hello [Traffic Manager Team / Name],
+
+As part of our efforts to improve the high availability and performance of our JFrog cluster, we have been exploring alternatives to the current SLB service, which has shown some technical limitations—particularly regarding slow artifact downloads from regions outside Paris.
+
+We have deployed a proof of concept using HAProxy in a 4-node OCS setup, which provides greater control over load balancing and improves service resilience. This configuration would also allow us to maintain effective regional failover via Traffic Manager.
+
+However, adding these HAProxy nodes to the Traffic Manager is currently restricted by an architectural policy that only allows SLB instances as DNS members.
+
+That said, we are aware that from a technical standpoint, it is entirely feasible to include OCS nodes in the Traffic Manager. Therefore, we are formally requesting an exception to allow the addition of these HAProxy instances as DNS members, strictly for evaluation purposes and within a controlled environment.
+
+Our goals with this request are:
+
+To assess the benefits in terms of performance, control, and reliability;
+
+And to reduce our dependency on SLB components, which we currently have limited control over.
+
+
+We remain available to present the proposed architecture in more detail and to coordinate closely with your team for monitoring and review.
+
+Looking forward to your feedback,
+Best regards,
