@@ -21,3 +21,23 @@ We remain available to present the proposed architecture in more detail and to c
 
 Looking forward to your feedback,
 Best regards,
+
+
+
+
+Hello [Traffic Manager Team / Name],
+
+Following our recent discussions, and based on the feedback received from your team, we understand that it is technically feasible to register OCS instances (in our case, HAProxy nodes) as members of the Traffic Manager, even though current architecture guidelines restrict it to SLB-only membership.
+
+As part of our ongoing efforts to optimize the availability and performance of our JFrog cluster, we conducted a proof of concept using HAProxy (in a non-HA 4-node OCS setup). This test has yielded significantly improved artifact download times, especially from regions outside Paris, where we previously experienced performance degradation with the current SLB-based configuration.
+
+In this context, we kindly request an exception to allow our HAProxy nodes to be registered in the Traffic Manager, for the purpose of DNS-based traffic routing across regions. This would enable us to benefit from improved performance and better control of our traffic distribution strategy.
+
+Should such an exception not be possible due to architectural or policy constraints, we would appreciate it if your team could propose an alternative DNS-based routing mechanism that would allow us to achieve similar functionality and regional failover behavior — without relying on SLB.
+
+We are available to provide all relevant technical documentation and coordinate closely with your team for implementation and testing.
+
+Looking forward to your response.
+Best regards,
+
+
