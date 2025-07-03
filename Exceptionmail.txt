@@ -41,3 +41,30 @@ Looking forward to your response.
 Best regards,
 
 
+
+
+
+
+
+
+
+Subject: Request for Exception to Integrate HAProxy Nodes into Traffic Manager for Improved DNS-Based Routing
+
+Dear Traffic Manager Team,
+
+Following our recent discussions and technical assessments, we would like to formally request an exception to allow the integration of OCS instances (HAProxy nodes) as members of the Traffic Manager for DNS-based routing.
+
+We have successfully completed a proof of concept using HAProxy to load balance traffic between our two JFrog servers in a development environment. The results have been very positive—especially in terms of download speeds for users outside the Paris region, which were significantly improved compared to the current setup.
+
+As part of this initiative, we are proposing a new target architecture where the Traffic Manager will route DNS requests directly to HAProxy instances deployed in high availability mode. These HAProxy nodes (4 instances per AZ) will be configured with Keepalived to manage two Virtual IPs (VIPs) per Availability Zone.
+
+Here is a visual overview of the target architecture:
+
+
+
+During our exchanges, it was confirmed by your team that technically it is feasible to add OCS instances to the Traffic Manager, but we understand this has been restricted due to architectural policies. Given the performance benefits observed, we kindly ask you to reconsider this restriction or, alternatively, provide us with an officially supported DNS-based routing solution that would allow us to bypass the use of SLBs.
+
+Your support on this matter would help us significantly improve artifact delivery performance for remote regions while simplifying our infrastructure.
+
+We remain available to further discuss or clarify the approach and provide detailed POC results if needed.
+
