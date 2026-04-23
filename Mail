@@ -1,15 +1,11 @@
-Subject: Request for a Meeting to Investigate Traffic Manager Performance Issue
 
-Hi [Team Name],
 
-I hope you're doing well.
-
-We're currently investigating a performance issue affecting file downloads from our Artifactory instance. While users in Paris are experiencing normal speeds, those connecting from New York are reporting significantly slower download rates.
-
-Initial tests suggest that latency is not the root cause, and the issue may be related to how Traffic Manager is routing or handling traffic to the affected region.
-
-Would it be possible to schedule a meeting with your team to analyze this further together? Please let us know your availability this week, and we’ll be happy to coordinate accordingly.
-
-Thanks in advance for your support.
-
+Subject: Request to Update Node Storage in Launch Template
+Hi EKS Team,
+I hope you’re doing well. As part of our ongoing effort to improve the performance of our Kubernetes cluster, we recently modified the node sizing for our Jenkins build node group. Specifically, we increased the flavor of the nodes, reducing the total number of nodes. However, we encountered an issue with ephemeral storage.
+Our pods, which run on these nodes, rely on ephemeral storage, and we now face a shortage due to the reduced number of nodes. Currently, the nodes, created via the launch template, have 80 GB of storage each. Given the new sizing, we would need to increase this to 200 GB per node to ensure stable operation.
+Could you please update the launch template with this new storage size for each node? Let me know if you need any additional details from our side.
+Thank you very much for your support!
 Best regards,
+[Your Name]
+[Your Team]
